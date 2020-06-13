@@ -4,7 +4,7 @@
 namespace App\Repository;
 
 
-class AuthorMysqlRepository implements AuthorRepository
+class AuthorMysqlRepository extends AuthorRepository
 {
     public function get()
     {

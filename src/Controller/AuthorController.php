@@ -19,7 +19,7 @@ class AuthorController extends AbstractController
      */
     protected $repository;
 
-    public function __construct(AuthorRepository $repository)
+    public function __construct(AuthorMysqlRepository $repository)
     {
         $this->repository = $repository;
     }
@@ -29,7 +29,11 @@ class AuthorController extends AbstractController
      */
     public function list()
     {
-        return $this->render();
+        $authors = $this->repository->get();
+
+        return $this->render('author/list.html.twig', [
+            'authors' => $authors
+        ]);
     }
 
     /**
