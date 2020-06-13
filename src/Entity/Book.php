@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BookRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeInterface;
 
@@ -37,6 +39,21 @@ class Book
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $page_count;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BookImage::class, mappedBy="book_id")
+     */
+    private $images;
+
+    /**
+     * @ORM\Column(type="string", length=2, nullable=true)
+     */
+    private $no;
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -87,6 +104,49 @@ class Book
     public function setPageCount(?int $page_count): self
     {
         $this->page_count = $page_count;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BookImage[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(BookImage $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setBookId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(BookImage $image): self
+    {
+        if ($this->images->contains($image)) {
+            $this->images->removeElement($image);
+            // set the owning side to null (unless already changed)
+            if ($image->getBookId() === $this) {
+                $image->setBookId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getNo(): ?string
+    {
+        return $this->no;
+    }
+
+    public function setNo(?string $no): self
+    {
+        $this->no = $no;
 
         return $this;
     }
