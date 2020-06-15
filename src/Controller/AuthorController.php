@@ -4,13 +4,15 @@
 namespace App\Controller;
 
 
-use App\Repository\AuthorMysqlRepository;
+use App\Entity\Author;
+use App\Form\AuthorType;
 use App\Repository\AuthorRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/authors", name="authors_")
+ * @Route("/authors", name="author_")
  */
 class AuthorController extends AbstractController
 {
@@ -19,7 +21,7 @@ class AuthorController extends AbstractController
      */
     protected $repository;
 
-    public function __construct(AuthorMysqlRepository $repository)
+    public function __construct(AuthorRepository $repository)
     {
         $this->repository = $repository;
     }
@@ -29,7 +31,10 @@ class AuthorController extends AbstractController
      */
     public function list()
     {
-        $authors = $this->repository->get();
+        $author = new Author();
+
+
+        $authors = $this->repository->findAll();
 
         return $this->render('author/list.html.twig', [
             'authors' => $authors
@@ -39,14 +44,33 @@ class AuthorController extends AbstractController
     /**
      * @Route("/create", name="create", methods={"GET"})
      */
-    public function create(AuthorRepository $repository)
+    public function create()
     {
+        $form = $this->createForm(AuthorType::class);
+
+        return $this->render('author/create.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
      * @Route("", name="store", methods={"POST"})
      */
-    public function store(){}
+    public function store(Request $request)
+    {
+        $form = $this->createForm(AuthorType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $task = $form->getData();
+
+            $this->repository->store($task);
+
+            return $this->redirectToRoute('task_success');
+        }
+
+
+    }
 
     /**
      * @Route("", name="update", methods={"PUT"})

@@ -1,13 +1,37 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}
+    {% trans %} Authors {% endtrans %}
+{% endblock %}
+
 {% block content %}
-    <h1>Blog</h1>
+    <div class="row mb-3">
+        <a href="{{ path('author_create') }}">
+            <button type="button" class="btn btn-success">{% trans %}Add author{% endtrans %}</button>
+        </a>
+    </div>
 
+    <table class="table col-4">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{% trans %} Fullname {% endtrans %}</th>
+                <th>{% trans %} Actions {% endtrans %}</th>
+            </tr>
+        </thead>
+        {% for author in authors %}
+            <tr>
+                <td>{{ loop.index }} </td>
+                <td>{{ author.getNameInitials() }}</td>
+                <td>
+                    <button type="button" class="btn btn-primary">{% trans %}Edit{% endtrans %}</button>
+                    <button type="button" class="btn btn-danger">{% trans %}Delete{% endtrans %}</button>
+                </td>
+            </tr>
+
+        {% endfor %}
+
+    </table>
 
 {% endblock %}
-
-{% block stylesheets %}
-    <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"/>
-{% endblock %}
-
 
