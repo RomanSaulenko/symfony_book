@@ -4,51 +4,45 @@ namespace App\Repository;
 
 use App\Entity\Author;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method boolean     delete($id)
  * @method Author|null find($id, $lockMode = null, $lockVersion = null)
  * @method Author|null findOneBy(array $criteria, array $orderBy = null)
  * @method Author[]    findAll()
  * @method Author[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- * @method Author|null update(array $fields)
  */
-abstract class AuthorRepository extends ServiceEntityRepository
+class AuthorRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Author::class);
     }
 
-    abstract public function store(Author $author);
-
-    // /**
-    //  * @return Author[] Returns an array of Author objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function delete(string $id):bool
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $author = $this->find($id);
 
-    /*
-    public function findOneBySomeField($value): ?Author
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        try {
+            $this->_em->remove($author);
+            $this->_em->flush();
+        } catch (ORMException $exception) {
+            return false;
+        }
+        return true;
     }
-    */
+
+
+    public function store(Author $author):?Author
+    {
+        try {
+            $this->_em->persist($author);
+            $this->_em->flush();
+        } catch (ORMException $exception) {
+            return null;
+        }
+        return $author;
+    }
+
 }

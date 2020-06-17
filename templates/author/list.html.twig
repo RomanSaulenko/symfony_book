@@ -7,7 +7,7 @@
 {% block content %}
     <div class="row mb-3">
         <a href="{{ path('author_create') }}">
-            <button type="button" class="btn btn-success">{% trans %}Add author{% endtrans %}</button>
+            <button type="button" class="btn btn-success">{% trans %}author.add{% endtrans %}</button>
         </a>
     </div>
 
@@ -15,8 +15,8 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>{% trans %} Fullname {% endtrans %}</th>
-                <th>{% trans %} Actions {% endtrans %}</th>
+                <th>{% trans %} author.Fullname {% endtrans %}</th>
+                <th>{% trans %} Actions         {% endtrans %}</th>
             </tr>
         </thead>
         {% for author in authors %}
@@ -25,11 +25,16 @@
                 <td>{{ author.getNameInitials() }}</td>
                 <td>
                     <button type="button" class="btn btn-primary">{% trans %}Edit{% endtrans %}</button>
-                    <button type="button" class="btn btn-danger">{% trans %}Delete{% endtrans %}</button>
+                    <button type="submit" class="btn btn-danger" form="delete_author">{% trans %}Delete{% endtrans %}</button>
+
+                    <form id="delete_author" action="{{ path('author_delete', {'id': author.id}) }}" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                    </form>
                 </td>
             </tr>
-
         {% endfor %}
+
+
 
     </table>
 

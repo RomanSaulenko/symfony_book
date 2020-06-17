@@ -19,13 +19,13 @@
                         <li class="nav-item">
                             <a class="nav-link {% if 'author' in app.request.attributes.get('_route') %} active {% endif %}"
                                href="{{ path('author_list') }}">
-                                {% trans %}Authors{% endtrans %}
+                                {% trans %}author.list{% endtrans %}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {% if 'book' in app.request.attributes.get('_route') %} active {% endif %}"
                                href="{{ path('book_list') }}">
-                                {% trans %}Books{% endtrans %}
+                                {% trans %}book.list{% endtrans %}
                             </a>
                         </li>
                     </ul>

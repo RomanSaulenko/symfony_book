@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% trans %} Books {% endtrans %}
+{% endblock %}
+
+{% block content %}
+    <div class="row mb-3">
+        <a href="{{ path('book_create') }}">
+            <button type="button" class="btn btn-success">{% trans %}book.add{% endtrans %}</button>
+        </a>
+    </div>
+
+    <table class="table col-6">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{% trans %} book.Title        {% endtrans %}</th>
+                <th>{% trans %} book.Year_created {% endtrans %}</th>
+                <th>{% trans %} ISBN              {% endtrans %}</th>
+                <th>{% trans %} book.Page_count   {% endtrans %}</th>
+                <th>{% trans %} Actions           {% endtrans %}</th>
+            </tr>
+        </thead>
+        {% for book in books %}
+            <tr>
+                <td>{{ loop.index }} </td>
+                <td>{{ book.title }}</td>
+                <td>{{ book.yearCreated }}</td>
+                <td>{{ book.isbn }}</td>
+                <td>{{ book.pageCount }}</td>
+                <td>
+                    <button type="button" class="btn btn-primary">{% trans %}Edit{% endtrans %}</button>
+                    <button type="submit" class="btn btn-danger" form="delete_author">{% trans %}Delete{% endtrans %}</button>
+
+                    <form id="delete_author" action="{{ path('book_delete', {'id': book.id}) }}" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+
+
+
+    </table>
+
+{% endblock %}
+

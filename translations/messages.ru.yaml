@@ -1,10 +1,19 @@
 Actions: Действия
-Add author: Добавить автора
-Add book: Добавить книгу
+author:
+  add: Добавить автора
+  added: Автор добавлен
+  deleted: Автор удален
+  data is updated: Данные автора обновлены
+  Fullname: ФИО
+  list: Авторы
 Authors: Авторы
-Books: Книги
+book:
+  add: Добавить книгу
+  list: Книги
+  Title: Название
+  Page_count: Количество страниц
+  Year_created: Год издания
 Catalog: Каталог
 Delete: Удалить
 Edit: Редактировать
-Fullname: ФИО
 Save: Сохранить

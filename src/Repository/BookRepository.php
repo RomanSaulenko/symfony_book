@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Book;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +20,28 @@ class BookRepository extends ServiceEntityRepository
         parent::__construct($registry, Book::class);
     }
 
-    // /**
-    //  * @return Book[] Returns an array of Book objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function store(Book $book):?Book
     {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        try {
+            $this->_em->persist($book);
+            $this->_em->flush();
+        } catch (ORMException $exception) {
+            return null;
+        }
+        return $book;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Book
+    public function delete(string $bookId): bool
     {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $book = $this->find($bookId);
+
+        try {
+            $this->_em->remove($book);
+            $this->_em->flush();
+        } catch (ORMException $exception) {
+            return false;
+        }
+        return true;
     }
-    */
+
 }

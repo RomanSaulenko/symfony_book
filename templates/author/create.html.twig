@@ -1,28 +1,31 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% trans %} Add author {% endtrans %}
+    {% trans %} author.add {% endtrans %}
 {% endblock %}
 
 {% block content %}
+
     {{ form_start(form) }}
+
         <div class="row m-3">
             <div class="col-4">
                 <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-2 col-form-label">{{ form_label(form.name) }}</label>
+                    {{ form_label(form.name, 'Fullname', {'label_attr': {'class': 'col-sm-2 col-form-label'}}) }}
 
                     <div class="col-sm-10">
                         {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
                     </div>
-
+                </div>
+                <div class="row offset-2">
+                    {{ form_errors(form.name) }}
                 </div>
 
                 <div class="row">
-                    <div class="">
-                        {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+                    <div>
+                        {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary', 'label': 'Fullname'}}) }}
                     </div>
                 </div>
-
             </div>
         </div>
 

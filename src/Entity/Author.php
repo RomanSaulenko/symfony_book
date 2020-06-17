@@ -4,10 +4,14 @@ namespace App\Entity;
 
 use App\Repository\AuthorRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AuthorRepository::class)
+ * @UniqueEntity(
+ *     fields={"name"},
+ * )
  */
 class Author
 {
@@ -19,8 +23,8 @@ class Author
     private $id;
 
     /**
-     * @Assert\NotBlank()
-     * @ORM\Column(type="string", length=150)
+     * @Assert\NotBlank(message="author.name.not_blank")
+     * @ORM\Column(type="string", unique=true, length=150)
      */
     private $name;
 
@@ -36,9 +40,14 @@ class Author
 
     public function getNameInitials()
     {
-        list($surname, $name, $partronymic) = explode(' ', $this->name);
+        $nameParts = explode(' ', $this->name);
+        $surname = array_shift($nameParts);
 
-        return $surname . ' ' . substr($name, 0, 1) . '. ' . substr($partronymic, 0, 1) . '.';
+        $fullname = $surname;
+        foreach ($nameParts as $namePart) {
+            $fullname .= ' ' . substr($namePart, 0, 1) . '.';
+        }
+        return $fullname;
     }
 
     public function setName(string $name): self

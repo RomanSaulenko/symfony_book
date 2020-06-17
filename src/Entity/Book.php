@@ -7,9 +7,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=BookRepository::class)
+ * @UniqueEntity(
+ *     fields={"title", "year_created"},
+ * )
+ * @UniqueEntity(
+ *     fields={"isbn"},
+ * )
  */
 class Book
 {
@@ -22,21 +30,26 @@ class Book
 
     /**
      * @ORM\Column(type="string", length=200)
+     * @Assert\NotBlank()
      */
     private $title;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Isbn()
      */
     private $isbn;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="integer")
+     * @Assert\Type(type={"integer"})
      */
     private $year_created;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Assert\Type(type={"integer"})
      */
     private $page_count;
 
@@ -44,11 +57,6 @@ class Book
      * @ORM\OneToMany(targetEntity=BookImage::class, mappedBy="book_id")
      */
     private $images;
-
-    /**
-     * @ORM\Column(type="string", length=2, nullable=true)
-     */
-    private $no;
 
     public function __construct()
     {
@@ -84,12 +92,12 @@ class Book
         return $this;
     }
 
-    public function getYearCreated(): ? DateTimeInterface
+    public function getYearCreated(): ? int
     {
         return $this->year_created;
     }
 
-    public function setYearCreated(? DateTimeInterface $year_created): self
+    public function setYearCreated(?int $year_created): self
     {
         $this->year_created = $year_created;
 
