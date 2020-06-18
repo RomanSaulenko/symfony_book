@@ -6,7 +6,9 @@
 
 {% block content %}
 
-    {{ form(form) }}
+    {{ form_start(form) }}
+        {% include 'book/_common_create_edit.html.twig' %}
+    {{ form_end(form) }}
 
 
 {% endblock %}

@@ -30,7 +30,9 @@
                 <td>{{ book.isbn }}</td>
                 <td>{{ book.pageCount }}</td>
                 <td>
-                    <button type="button" class="btn btn-primary">{% trans %}Edit{% endtrans %}</button>
+                    <a href="{{ path('book_edit', {id: book.id}) }}">
+                        <button type="button" class="btn btn-primary">{% trans %}Edit{% endtrans %}</button>
+                    </a>
                     <button type="submit" class="btn btn-danger" form="delete_author">{% trans %}Delete{% endtrans %}</button>
 
                     <form id="delete_author" action="{{ path('book_delete', {'id': book.id}) }}" method="POST">

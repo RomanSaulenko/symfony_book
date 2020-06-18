@@ -9,6 +9,8 @@ author:
 Authors: Авторы
 book:
   add: Добавить книгу
+  image: Оболожка
+  image_invalid_format: Формат файла должен быть jpeg или png
   list: Книги
   Title: Название
   Page_count: Количество страниц

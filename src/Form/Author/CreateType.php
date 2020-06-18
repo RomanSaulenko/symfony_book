@@ -11,10 +11,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorTrait;
 
 
 class CreateType extends AbstractType
 {
+    use TranslatorTrait;
     /**
      * @var UrlGeneratorInterface
      */
@@ -30,7 +32,8 @@ class CreateType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('save', SubmitType::class)
-            ->setAction($this->generator->generate('author_store'))
+            ->add('save', SubmitType::class, ['label' => $this->trans('Save')])
+            ->setAction($this->generator->generate('author_create'))
         ;
     }
 

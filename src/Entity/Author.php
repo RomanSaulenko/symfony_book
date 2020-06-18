@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AuthorRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -27,6 +29,21 @@ class Author
      * @ORM\Column(type="string", unique=true, length=150)
      */
     private $name;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Book::class, mappedBy="authors")
+     */
+    private $books;
+
+    public function getIdValue()
+    {
+        return $this->id;
+    }
+
+    public function __construct()
+    {
+        $this->books = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -55,5 +72,38 @@ class Author
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Book[]
+     */
+    public function getBooks(): Collection
+    {
+        return $this->books;
+    }
+
+    public function addBook(Book $book): self
+    {
+        if (!$this->books->contains($book)) {
+            $this->books[] = $book;
+            $book->addAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBook(Book $book): self
+    {
+        if ($this->books->contains($book)) {
+            $this->books->removeElement($book);
+            $book->removeAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function getCreateLabel()
+    {
+        return 'Author labell';
     }
 }

@@ -29,8 +29,9 @@ class EditType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('save', SubmitType::class)
+            ->add('save', SubmitType::class, ['label' => $this->trans('Save')])
             ->setMethod('PUT')
-            ->setAction($this->generator->generate('author_update', ['id' => $options['data']->getId()]))
+            ->setAction($this->generator->generate('author_edit', ['id' => $options['data']->getId()]))
         ;
     }
 

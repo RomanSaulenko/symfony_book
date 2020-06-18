@@ -4,11 +4,8 @@
 namespace App\Form\Book;
 
 
-use App\Entity\Author;
 use App\Entity\Book;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -19,7 +16,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Contracts\Translation\TranslatorTrait;
 
-class CreateType extends AbstractType
+class EditType extends AbstractType
 {
     use TranslatorTrait;
 
@@ -62,8 +59,8 @@ class CreateType extends AbstractType
                 ],
             ])
             ->add('save', SubmitType::class, ['label' => $this->trans('Save')])
-
-            ->setAction($this->generator->generate('book_create'))
+            ->setMethod('PUT')
+            ->setAction($this->generator->generate('book_edit', ['id' => $options['data']->getId()]))
         ;
     }
 

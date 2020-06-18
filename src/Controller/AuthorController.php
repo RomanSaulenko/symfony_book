@@ -42,45 +42,9 @@ class AuthorController extends AbstractController
     }
 
     /**
-     * @Route("/create", name="create", methods={"GET"})
+     * @Route("/create", name="create", methods={"GET", "POST"})
      */
-    public function create()
-    {
-        $form = $this->createForm(CreateType::class);
-
-        return $this->render('author/create.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="edit", methods={"GET"})
-     */
-    public function edit(string $id)
-    {
-        $author = $this->repository->find($id);
-        $form = $this->createForm(EditType::class, $author);
-
-        return $this->render('author/edit.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="delete", methods={"DELETE"})
-     */
-    public function delete(string $id)
-    {
-        $this->repository->delete($id);
-        $this->addFlash('success', $this->trans('author.deleted'));
-
-        return $this->redirectToRoute('author_list');
-    }
-
-    /**
-     * @Route("", name="store", methods={"POST"})
-     */
-    public function store(Request $request)
+    public function create(Request $request)
     {
         $form = $this->createForm(CreateType::class);
         $form->handleRequest($request);
@@ -93,17 +57,18 @@ class AuthorController extends AbstractController
             $this->addFlash('success', $this->trans('author.added'));
 
             return $this->redirectToRoute('author_list');
-        } else {
-            return $this->render('author/create.html.twig', [
-                'form' => $form->createView(),
-            ]);
         }
+
+        return $this->render('author/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
-     * @Route("/{id}", name="update", methods={"PUT"})
+     * @Route("/{id}", name="edit", methods={"GET", "PUT"})
      */
-    public function update(Request $request, string $id){
+    public function edit(Request $request, string $id)
+    {
         $author = $this->repository->find($id);
 
         $form = $this->createForm(EditType::class, $author);
@@ -122,6 +87,17 @@ class AuthorController extends AbstractController
                 'form' => $form->createView(),
             ]);
         }
+    }
+
+    /**
+     * @Route("/{id}", name="delete", methods={"DELETE"})
+     */
+    public function delete(string $id)
+    {
+        $this->repository->delete($id);
+        $this->addFlash('success', $this->trans('author.deleted'));
+
+        return $this->redirectToRoute('author_list');
     }
 
 }

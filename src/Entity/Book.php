@@ -6,7 +6,6 @@ use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -54,13 +53,19 @@ class Book
     private $page_count;
 
     /**
-     * @ORM\OneToMany(targetEntity=BookImage::class, mappedBy="book_id")
+     * @ORM\Column(type="string", nullable=true)
      */
-    private $images;
+    private $image;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Author::class, inversedBy="books")
+     */
+    private $authors;
 
     public function __construct()
     {
         $this->images = new ArrayCollection();
+        $this->authors = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -116,45 +121,43 @@ class Book
         return $this;
     }
 
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
     /**
-     * @return Collection|BookImage[]
+     * @return string
      */
-    public function getImages(): Collection
+    public function getImage(): ?string
     {
-        return $this->images;
+        return $this->image;
     }
 
-    public function addImage(BookImage $image): self
+    /**
+     * @return Collection|Author[]
+     */
+    public function getAuthors(): Collection
     {
-        if (!$this->images->contains($image)) {
-            $this->images[] = $image;
-            $image->setBookId($this);
+        return $this->authors;
+    }
+
+    public function addAuthor(Author $author): self
+    {
+        if (!$this->authors->contains($author)) {
+            $this->authors[] = $author;
         }
 
         return $this;
     }
 
-    public function removeImage(BookImage $image): self
+    public function removeAuthor(Author $author): self
     {
-        if ($this->images->contains($image)) {
-            $this->images->removeElement($image);
-            // set the owning side to null (unless already changed)
-            if ($image->getBookId() === $this) {
-                $image->setBookId(null);
-            }
+        if ($this->authors->contains($author)) {
+            $this->authors->removeElement($author);
         }
-
-        return $this;
-    }
-
-    public function getNo(): ?string
-    {
-        return $this->no;
-    }
-
-    public function setNo(?string $no): self
-    {
-        $this->no = $no;
 
         return $this;
     }

@@ -1,4 +1,6 @@
 {
+    "name": "romansaulenko/symfony_book_project",
+    "description": "Project enables to create book, authors, link them.",
     "type": "project",
     "license": "proprietary",
     "require": {

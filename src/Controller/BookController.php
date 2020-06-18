@@ -4,8 +4,12 @@
 namespace App\Controller;
 
 use App\Form\Book\CreateType;
+use App\Form\Book\EditType;
 use App\Repository\BookRepository;
+use App\Service\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorTrait;
@@ -17,22 +21,83 @@ class BookController extends AbstractController
 {
     use TranslatorTrait;
 
+    /**
+     * @var ParameterBagInterface
+     */
+    protected $parameterBag;
+
+    /**
+     * @var BookRepository
+     */
     protected $repository;
 
-    public function __construct(BookRepository $repository)
+    public function __construct(ParameterBagInterface $parameterBag, BookRepository $repository)
     {
+        $this->parameterBag = $parameterBag;
         $this->repository = $repository;
     }
 
     /**
-     * @Route("/create", name="create", methods={"GET"})
+     * @Route("/create", name="create", methods={"GET", "POST"})
      */
-    public function create()
+    public function create(Request $request, FileUploader $fileUploader)
     {
         $form = $this->createForm(CreateType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $book = $form->getData();
+
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $imageDir = $this->parameterBag->get('book_image_directory');
+                $fileUploader->setFileDirectory($imageDir);
+                $imageFileName = $fileUploader->upload($imageFile);
+                $book->setImage($imageFileName);
+            }
+            $this->repository->store($book);
+
+            $this->addFlash('success', $this->trans('book.added'));
+
+            return $this->redirectToRoute('book_list');
+        }
 
         return $this->render('book/create.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="edit", methods={"GET", "PUT"})
+     */
+    public function edit(Request $request, FileUploader $fileUploader, string $id)
+    {
+        $book = $this->repository->find($id);
+
+        $form = $this->createForm(EditType::class, $book);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $book = $form->getData();
+
+            /** @var UploadedFile $imageFile */
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $imageDir = $this->parameterBag->get('book_image_directory');
+                $fileUploader->setFileDirectory($imageDir);
+                $imageFileName = $fileUploader->upload($imageFile);
+                $book->setImage($imageFileName);
+            }
+
+            $this->repository->store($book);
+            $this->addFlash('success', $this->trans("book.data is updated"));
+
+            return $this->redirectToRoute('book_list');
+        }
+
+        return $this->render('book/edit.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
@@ -42,9 +107,9 @@ class BookController extends AbstractController
     public function delete(string $id)
     {
         $this->repository->delete($id);
-        $this->addFlash('success', $this->trans('Author is deleted'));
+        $this->addFlash('success', $this->trans('Book is deleted'));
 
-        return $this->redirectToRoute('author_list');
+        return $this->redirectToRoute('book_list');
     }
 
     /**
@@ -57,29 +122,6 @@ class BookController extends AbstractController
         return $this->render('book/list.html.twig', [
             'books' => $books
         ]);
-    }
-
-    /**
-     * @Route("", name="store", methods={"POST"})
-     */
-    public function store(Request $request)
-    {
-        $form = $this->createForm(CreateType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $author = $form->getData();
-
-            $this->repository->store($author);
-
-            $this->addFlash('success', $this->trans('book.added'));
-
-            return $this->redirectToRoute('book_list');
-        } else {
-            return $this->render('book/create.html.twig', [
-                'form' => $form->createView(),
-            ]);
-        }
     }
 
 }

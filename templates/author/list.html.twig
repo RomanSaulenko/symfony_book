@@ -24,7 +24,9 @@
                 <td>{{ loop.index }} </td>
                 <td>{{ author.getNameInitials() }}</td>
                 <td>
-                    <button type="button" class="btn btn-primary">{% trans %}Edit{% endtrans %}</button>
+                    <a href="{{ path('author_edit', {id: author.id}) }}">
+                        <button type="button" class="btn btn-primary">{% trans %}Edit{% endtrans %}</button>
+                    </a>
                     <button type="submit" class="btn btn-danger" form="delete_author">{% trans %}Delete{% endtrans %}</button>
 
                     <form id="delete_author" action="{{ path('author_delete', {'id': author.id}) }}" method="POST">
