@@ -1,4 +1,26 @@
 <div class="row m-3">
+
+    <div class="col-3">
+        <div class="form-group row">
+
+            <div class="col-sm-10 offset-2">
+                {% if form.image.vars.value %}
+                    <img src="{{ asset('uploads/books/' ~ form.image.vars.value) }}" class="img-fluid" alt="None" />
+                {% else %}
+                    <img src="{{ asset('uploads/default.jpg') }}" class="img-fluid" alt="None" />
+                {% endif %}
+            </div>
+        </div>
+        <div class="row offset-2">
+            <div class="col-sm-10">
+                {{ form_widget(form.image_file, {'attr': {'class': 'form-control-file'}}) }}
+            </div>
+        </div>
+        <div class="row offset-2">
+            {{ form_errors(form.image_file) }}
+        </div>
+    </div>
+
     <div class="col-4">
         <div class="form-group row">
             {{ form_label(form.title, 'book.Title', {'label_attr': {'class': 'col-sm-2 col-form-label'}}) }}
@@ -48,17 +70,22 @@
             {{ form_label(form.authors, 'author.list', {'label_attr': {'class': 'col-sm-2 col-form-label'}}) }}
 
             <div class="col-sm-10">
-                {{ form_widget(form.authors, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(form.authors, {
+                    'attr': {'class': 'form-control'},
+                    'entity_type': null,
+                    'choice_label': 'name'
+                }) }}
             </div>
         </div>
         <div class="row offset-2">
-            {{ form_errors(form.authors) }}
+            {{ form_errors(form.image_file) }}
         </div>
 
-        <div class="row">
+        <div class="row offset-2">
             <div>
                 {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
             </div>
         </div>
     </div>
+
 </div>

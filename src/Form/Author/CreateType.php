@@ -32,7 +32,7 @@ class CreateType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('save', SubmitType::class)
-            ->add('save', SubmitType::class, ['label' => $this->trans('Save')])
+            ->add('save', SubmitType::class)
             ->setAction($this->generator->generate('author_create'))
         ;
     }

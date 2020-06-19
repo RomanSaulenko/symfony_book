@@ -11,9 +11,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorTrait;
 
 class EditType extends AbstractType
 {
+    use TranslatorTrait;
+
     /**
      * @var UrlGeneratorInterface
      */
@@ -29,7 +32,7 @@ class EditType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('save', SubmitType::class)
-            ->add('save', SubmitType::class, ['label' => $this->trans('Save')])
+            ->add('save', SubmitType::class)
             ->setMethod('PUT')
             ->setAction($this->generator->generate('author_edit', ['id' => $options['data']->getId()]))
         ;

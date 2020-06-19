@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Event\Book\BeforeAddImage;
 use App\Form\Book\CreateType;
 use App\Form\Book\EditType;
 use App\Repository\BookRepository;
@@ -12,6 +13,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorTrait;
 
 /**
@@ -25,16 +27,20 @@ class BookController extends AbstractController
      * @var ParameterBagInterface
      */
     protected $parameterBag;
-
     /**
      * @var BookRepository
      */
     protected $repository;
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $dispatcher;
 
-    public function __construct(ParameterBagInterface $parameterBag, BookRepository $repository)
+    public function __construct(BookRepository $repository, ParameterBagInterface $parameterBag, EventDispatcherInterface $dispatcher)
     {
-        $this->parameterBag = $parameterBag;
         $this->repository = $repository;
+        $this->parameterBag = $parameterBag;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -51,7 +57,7 @@ class BookController extends AbstractController
             /** @var UploadedFile $imageFile */
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
-                $imageDir = $this->parameterBag->get('book_image_directory');
+                $imageDir = $this->parameterBag->get('app.book_image_directory');
                 $fileUploader->setFileDirectory($imageDir);
                 $imageFileName = $fileUploader->upload($imageFile);
                 $book->setImage($imageFileName);
@@ -82,10 +88,14 @@ class BookController extends AbstractController
             $book = $form->getData();
 
             /** @var UploadedFile $imageFile */
-            $imageFile = $form->get('image')->getData();
+            $imageFile = $form->get('image_file')->getData();
+
             if ($imageFile) {
-                $imageDir = $this->parameterBag->get('book_image_directory');
-                $fileUploader->setFileDirectory($imageDir);
+                $bookImageDir = $this->parameterBag->get('app.book_image_directory');
+
+                $this->dispatcher->dispatch(new BeforeAddImage($book, $bookImageDir));
+
+                $fileUploader->setFileDirectory($bookImageDir);
                 $imageFileName = $fileUploader->upload($imageFile);
                 $book->setImage($imageFileName);
             }

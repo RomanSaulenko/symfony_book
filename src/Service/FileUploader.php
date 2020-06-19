@@ -34,7 +34,7 @@ class FileUploader
         return $fileName;
     }
 
-    public function setFileDirectory(string $fileDirectory)
+    public function  setFileDirectory(string $fileDirectory)
     {
         $this->fileDirectory = $fileDirectory;
     }

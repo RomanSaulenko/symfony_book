@@ -7,6 +7,7 @@ namespace App\Form\Book;
 use App\Entity\Book;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -41,9 +42,7 @@ class EditType extends AbstractType
                     'choice_label' => 'name',
                 ]
             )
-            ->add('image', FileType::class, [
-                'label' => $this->trans('book.image'),
-
+            ->add('image_file', FileType::class, [
                 'mapped' => false,
                 'required' => false,
 
@@ -58,7 +57,8 @@ class EditType extends AbstractType
                     ])
                 ],
             ])
-            ->add('save', SubmitType::class, ['label' => $this->trans('Save')])
+            ->add('image', HiddenType::class)
+            ->add('save', SubmitType::class)
             ->setMethod('PUT')
             ->setAction($this->generator->generate('book_edit', ['id' => $options['data']->getId()]))
         ;
