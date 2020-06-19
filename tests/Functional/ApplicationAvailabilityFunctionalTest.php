@@ -3,13 +3,12 @@
 
 namespace App\Tests;
 
-
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ApplicationAvailabilityFunctionalTest extends WebTestCase
 {
     /**
-     * @dataProvider urlProvider
+     * @dataProvider successUrlProvider
      */
     public function testPageIsSuccessful($url)
     {
@@ -19,12 +18,27 @@ class ApplicationAvailabilityFunctionalTest extends WebTestCase
         $this->assertResponseIsSuccessful();
     }
 
-    public function urlProvider()
+    public function successUrlProvider()
     {
-        yield ['/'];
         yield ['/authors'];
         yield ['/authors/create'];
         yield ['/books'];
         yield ['/books/create'];
+    }
+
+    /**
+     * @dataProvider redirectUrlProvider
+     */
+    public function testPageIsRedirect($url)
+    {
+        $client = self::createClient();
+        $client->request('GET', $url);
+
+        $this->assertResponseRedirects();
+    }
+
+    public function redirectUrlProvider()
+    {
+        yield ['/'];
     }
 }
