@@ -55,7 +55,7 @@ class BookController extends AbstractController
             $book = $form->getData();
 
             /** @var UploadedFile $imageFile */
-            $imageFile = $form->get('image')->getData();
+            $imageFile = $form->get('image_file')->getData();
             if ($imageFile) {
                 $imageDir = $this->parameterBag->get('app.book_image_directory');
                 $fileUploader->setFileDirectory($imageDir);
