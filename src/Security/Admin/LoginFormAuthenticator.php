@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security;
+namespace App\Security\Admin;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,7 +24,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'security_login';
+    public const LOGIN_ROUTE = 'admin_security_login';
 
     private $entityManager;
     private $urlGenerator;

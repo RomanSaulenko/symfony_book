@@ -12,22 +12,22 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/security/login", name="security_login")
+     * @Route("/admin/security/login", name="admin_security_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-         if ($this->getUser()) {
-             return $this->redirectToRoute('admin_index');
-         }
+        if ($this->getUser()) {
+         return $this->redirectToRoute('admin_index');
+        }
 
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('admin/security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
     /**
-     * @Route("/security/logout", name="security_logout")
+     * @Route("/admin/security/logout", name="admin_security_logout")
      */
     public function logout()
     {

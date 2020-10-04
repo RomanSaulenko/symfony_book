@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Controller;
+namespace App\Controller\Client;
 
 use App\Event\Book\BeforeAddImage;
 use App\Form\Book\CreateType;

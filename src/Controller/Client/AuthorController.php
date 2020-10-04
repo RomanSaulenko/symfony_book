@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Controller;
+namespace App\Controller\Client;
 
 
 use App\Form\Author\CreateType;
